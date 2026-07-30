@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#2563EB" />
+<meta name="description" content="Computer Quiz Part 2 — 360 Fill in the Blanks and Abbreviation questions with instant scoring, review mode and offline support." />
+<title>Computer Quiz Part 2</title>
+
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon-192.png" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ======================= APP SHELL ======================= -->
+<div class="app" id="app">
+
+  <!-- ------------- HOME SCREEN ------------- -->
+  <section class="screen screen--home is-active" id="screen-home" aria-labelledby="home-title">
+    <div class="home">
+      <div class="home__badge">Basic Computer Course · Part 2</div>
+      <h1 class="home__title" id="home-title">Computer Quiz Part 2</h1>
+      <p class="home__subtitle">Fill in the Blanks and Abbreviations from the official question bank — type your answer, get instant scoring.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card stat-card--primary">
+          <span class="stat-card__value" id="stat-total">360</span>
+          <span class="stat-card__label">Total Questions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-fill">110</span>
+          <span class="stat-card__label">Fill in the Blanks</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value" id="stat-abbr">250</span>
+          <span class="stat-card__label">Abbreviations</span>
+        </div>
+      </div>
+
+      <div class="home__actions">
+        <button class="btn btn--primary btn--lg" id="btn-start" type="button">Start Quiz</button>
+        <button class="btn btn--outline btn--lg is-hidden" id="btn-continue" type="button">
+          Continue Quiz <span class="btn__meta" id="continue-meta"></span>
+        </button>
+        <button class="btn btn--install is-hidden" id="btn-install" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          Install App
+        </button>
+      </div>
+
+      <p class="home__hint">Your progress is saved automatically on this device, and the quiz works fully offline once loaded.</p>
+    </div>
+  </section>
+
+  <!-- ------------- QUIZ SCREEN ------------- -->
+  <section class="screen screen--quiz" id="screen-quiz" aria-labelledby="quiz-title">
+    <header class="quiz-header">
+      <button class="icon-btn" id="btn-quit" type="button" aria-label="Back to home">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <div class="quiz-header__center">
+        <span class="quiz-header__title" id="quiz-title">Question <span id="q-current">1</span> / <span id="q-total">360</span></span>
+        <span class="quiz-header__type" id="q-type-badge">Fill in the Blank</span>
+      </div>
+
+      <button class="icon-btn" id="btn-palette-toggle" type="button" aria-label="Open question palette" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </button>
+    </header>
+
+    <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="360" id="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="quiz-body">
+      <div class="card question-card">
+        <p class="question-card__text" id="question-text">Loading question…</p>
+      </div>
+
+      <div class="answer-card">
+        <label class="answer-card__label" for="answer-input">Your answer</label>
+        <input
+          class="answer-card__input"
+          id="answer-input"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          placeholder="Type your answer here"
+        />
+        <p class="answer-card__hint">Answers are checked without worrying about upper/lower case or extra spaces.</p>
+      </div>
+    </div>
+
+    <footer class="quiz-footer">
+      <button class="btn btn--ghost" id="btn-prev" type="button">Previous</button>
+      <button class="btn btn--primary" id="btn-next" type="button">Next</button>
+      <button class="btn btn--success is-hidden" id="btn-submit" type="button">Submit</button>
+    </footer>
+  </section>
+
+  <!-- ------------- QUESTION PALETTE DRAWER ------------- -->
+  <div class="palette-overlay" id="palette-overlay"></div>
+  <aside class="palette-drawer" id="palette-drawer" aria-label="Question palette">
+    <div class="palette-drawer__header">
+      <h2>Question Palette</h2>
+      <button class="icon-btn" id="btn-palette-close" type="button" aria-label="Close question palette">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="palette-drawer__legend">
+      <span class="legend-item"><i class="dot dot--visited"></i>Not visited</span>
+      <span class="legend-item"><i class="dot dot--answered"></i>Answered</span>
+      <span class="legend-item"><i class="dot dot--current"></i>Current</span>
+    </div>
+
+    <div class="palette-grid" id="palette-grid">
+      <!-- 360 palette cells injected by app.js -->
+    </div>
+
+    <div class="palette-drawer__footer">
+      <button class="btn btn--success btn--block" id="btn-submit-palette" type="button">Submit Quiz</button>
+    </div>
+  </aside>
+
+  <!-- ------------- RESULT SCREEN ------------- -->
+  <section class="screen screen--result" id="screen-result" aria-labelledby="result-title">
+    <div class="result">
+      <div class="result__ring-wrap">
+        <svg class="result__ring" viewBox="0 0 140 140" width="140" height="140">
+          <circle class="result__ring-track" cx="70" cy="70" r="60" />
+          <circle class="result__ring-fill" id="result-ring-fill" cx="70" cy="70" r="60" />
+        </svg>
+        <div class="result__ring-text">
+          <span class="result__percentage" id="result-percentage">0%</span>
+          <span class="result__ring-label">Score</span>
+        </div>
+      </div>
+
+      <h1 class="result__title" id="result-title">Quiz Completed</h1>
+      <p class="result__score" id="result-score">0 / 360</p>
+
+      <div class="result-grid">
+        <div class="result-stat">
+          <span class="result-stat__value" id="result-total">360</span>
+          <span class="result-stat__label">Total</span>
+        </div>
+        <div class="result-stat result-stat--correct">
+          <span class="result-stat__value" id="result-correct">0</span>
+          <span class="result-stat__label">Correct</span>
+        </div>
+        <div class="result-stat result-stat--wrong">
+          <span class="result-stat__value" id="result-wrong">0</span>
+          <span class="result-stat__label">Wrong</span>
+        </div>
+        <div class="result-stat result-stat--unattempted">
+          <span class="result-stat__value" id="result-skipped">0</span>
+          <span class="result-stat__label">Skipped</span>
+        </div>
+      </div>
+
+      <div class="result__actions">
+        <button class="btn btn--primary btn--lg" id="btn-review" type="button">Review Answers</button>
+        <button class="btn btn--outline btn--lg" id="btn-restart" type="button">Restart Quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------- REVIEW SCREEN ------------- -->
+  <section class="screen screen--review" id="screen-review" aria-labelledby="review-title">
+    <header class="review-header">
+      <button class="icon-btn" id="btn-review-back" type="button" aria-label="Back to result">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h1 class="review-header__title" id="review-title">Review Answers</h1>
+      <span class="review-header__spacer"></span>
+    </header>
+
+    <div class="review-filters" id="review-filters" role="tablist">
+      <button class="filter-chip is-active" data-filter="all" type="button">All</button>
+      <button class="filter-chip" data-filter="correct" type="button">Correct</button>
+      <button class="filter-chip" data-filter="wrong" type="button">Wrong</button>
+      <button class="filter-chip" data-filter="skipped" type="button">Skipped</button>
+    </div>
+
+    <div class="review-list" id="review-list">
+      <!-- review items injected by app.js -->
+    </div>
+  </section>
+
+</div>
+
+<script src="quiz.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>
